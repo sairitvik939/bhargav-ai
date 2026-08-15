@@ -1,19 +1,77 @@
-const http = require("http");
-const fs = require("fs");
+const express = require("express");
 
-const server = http.createServer((req, res) => {
-    fs.readFile("bhargav-ai.html", (err, data) => {
-        if (err) {
-            res.writeHead(500, {"Content-Type": "text/plain"});
-            res.end("Error loading BHARGAV AI");
-            return;
-        }
+const app = express();
 
-        res.writeHead(200, {"Content-Type": "text/html"});
-        res.end(data);
-    });
+app.use(express.json());
+
+// Open BHARGAV AI webpage
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/bhargav-ai.html");
 });
 
-server.listen(3000, "0.0.0.0", () => {
-    console.log("BHARGAV AI is running at http://localhost:3000");
+// Ask Gemini
+app.post("/ask", async (req, res) => {
+    const question = req.body.question;
+
+    if (!question) {
+        return res.status(400).json({
+            answer: "Please enter a question."
+        });
+    }
+
+    try {
+        const response = await fetch(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
+            process.env.GEMINI_API_KEY,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    contents: [
+                        {
+                            parts: [
+                                {
+                                    text: question
+                                }
+                            ]
+                        }
+                    ]
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error(data);
+
+            return res.status(500).json({
+                answer: "Sorry, BHARGAV AI could not connect to Gemini."
+            });
+        }
+
+        const answer =
+            data.candidates?.[0]?.content?.parts?.[0]?.text ||
+            "Sorry, Gemini did not return an answer.";
+
+        res.json({
+            answer: answer
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            answer: "Sorry, BHARGAV AI could not connect to Gemini."
+        });
+    }
+});
+
+// Start server
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`BHARGAV AI is running on port ${PORT}`);
 });
