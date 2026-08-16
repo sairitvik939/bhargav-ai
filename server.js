@@ -4,7 +4,7 @@ const app = express();
 
 app.use(express.json());
 
-// Open BHARGAV AI webpage
+// Open BHARGAV AI website
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/bhargav-ai.html");
 });
@@ -21,7 +21,7 @@ app.post("/ask", async (req, res) => {
 
     try {
         const response = await fetch(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" +
             process.env.GEMINI_API_KEY,
             {
                 method: "POST",
@@ -44,24 +44,26 @@ app.post("/ask", async (req, res) => {
 
         const data = await response.json();
 
-        if (!response.ok) {
-            console.error(data);
+        console.log("Gemini response:", JSON.stringify(data));
 
+        if (!response.ok) {
             return res.status(500).json({
-                answer: "Sorry, BHARGAV AI could not connect to Gemini."
+                answer: "Gemini error: " + (
+                    data.error?.message || "Unknown error"
+                )
             });
         }
 
         const answer =
             data.candidates?.[0]?.content?.parts?.[0]?.text ||
-            "Sorry, Gemini did not return an answer.";
+            "Gemini did not return an answer.";
 
         res.json({
             answer: answer
         });
 
     } catch (error) {
-        console.error(error);
+        console.error("Server error:", error);
 
         res.status(500).json({
             answer: "Sorry, BHARGAV AI could not connect to Gemini."
@@ -69,7 +71,7 @@ app.post("/ask", async (req, res) => {
     }
 });
 
-// Start server
+// Render provides the PORT automatically
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, "0.0.0.0", () => {
