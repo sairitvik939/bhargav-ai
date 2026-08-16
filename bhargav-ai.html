@@ -1,196 +1,177 @@
-```html
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-    <title>BHARGAV AI</title>
+<title>BHARGAV AI</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            text-align: center;
-            margin-top: 40px;
-        }
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        text-align: center;
+        margin-top: 40px;
+    }
 
-        h1 {
-            color: #333;
-        }
+    h1 {
+        color: #333;
+    }
 
-        #chat {
-            width: 600px;
-            max-width: 90%;
-            margin: 20px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            min-height: 200px;
-            text-align: left;
-        }
+    #chat {
+        width: 600px;
+        max-width: 90%;
+        margin: 20px auto;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        min-height: 200px;
+        text-align: left;
+    }
 
-        .user {
-            background: #e3f2fd;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-        }
+    .user {
+        background: #e3f2fd;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 8px;
+    }
 
-        .ai {
-            background: #eeeeee;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-        }
+    .ai {
+        background: #eeeeee;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 8px;
+    }
 
-        #question {
-            width: 450px;
-            max-width: 65%;
-            padding: 12px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
+    #question {
+        width: 450px;
+        max-width: 65%;
+        padding: 12px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+    }
 
-        button {
-            padding: 12px 20px;
-            font-size: 16px;
-            margin-left: 5px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-    </style>
+    button {
+        padding: 12px 20px;
+        font-size: 16px;
+        margin-left: 5px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+</style>
 </head>
 
 <body>
 
-    <h1>🤖 BHARGAV AI</h1>
+<h1>🤖 BHARGAV AI</h1>
 
-    <p>Your All-in-One AI Assistant</p>
+<p>Your All-in-One AI Assistant</p>
 
-    <div id="chat">
-        <div class="ai">
-            🤖 BHARGAV AI: Hello! How can I help you?
-        </div>
+<div id="chat">
+    <div class="ai">
+        🤖 BHARGAV AI: Hello! How can I help you?
     </div>
+</div>
 
-    <input
-        id="question"
-        type="text"
-        placeholder="Ask BHARGAV AI anything..."
-    >
+<input
+    id="question"
+    type="text"
+    placeholder="Ask BHARGAV AI anything..."
+>
 
-    <button onclick="askAI()">SEND</button>
+<button onclick="askAI()">SEND</button>
 
-    <script>
+<script>
 
-        function askAI() {
+async function askAI() {
 
-            let question = document.getElementById("question").value.trim();
+    let question = document.getElementById("question").value.trim();
 
-            if (question === "") {
-                return;
-            }
+    if (question === "") {
+        return;
+    }
 
-            let chat = document.getElementById("chat");
+    let chat = document.getElementById("chat");
 
-            // Show user's question
-            chat.innerHTML +=
-                '<div class="user">👤 You: ' +
-                question +
-                '</div>';
+    // Show user's question
+    chat.innerHTML +=
+        '<div class="user">👤 You: ' +
+        question +
+        '</div>';
 
-            let lowerQuestion = question.toLowerCase();
+    // Show thinking message
+    chat.innerHTML +=
+        '<div class="ai" id="thinking">🤖 BHARGAV AI: Thinking...</div>';
 
-            let answer = "";
+    // Clear question box
+    document.getElementById("question").value = "";
 
-            if (lowerQuestion.includes("hello") ||
-                lowerQuestion.includes("hi")) {
+    try {
 
-                answer =
-                    "Hello! 👋 I am BHARGAV AI. How can I help you?";
+        const response = await fetch("/ask", {
+            method: "POST",
 
-            }
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-            else if (lowerQuestion.includes("neet")) {
-
-                answer =
-                    "NEET is the entrance examination for undergraduate medical courses in India. 🩺";
-
-            }
-
-            else if (lowerQuestion.includes("who are you")) {
-
-                answer =
-                    "I am BHARGAV AI 🤖, your All-in-One AI Assistant.";
-
-            }
-
-            else if (lowerQuestion.includes("your name")) {
-
-                answer =
-                    "My name is BHARGAV AI 🤖.";
-
-            }
-
-            else if (lowerQuestion.includes("how are you")) {
-
-                answer =
-                    "I am doing great! 😄 Thank you for asking.";
-
-            }
-
-            else if (lowerQuestion.includes("medical college")) {
-
-                answer =
-                    "I can help you learn about medical colleges, NEET counselling, courses and more. 🩺";
-
-            }
-
-            else if (lowerQuestion.includes("thank you") ||
-                     lowerQuestion.includes("thanks")) {
-
-                answer =
-                    "You're welcome! 😊";
-
-            }
-
-            else {
-
-                answer =
-                    "I received your question. 🤖 I am still learning! 🚀";
-
-            }
-
-            // Show AI answer
-            chat.innerHTML +=
-                '<div class="ai">🤖 BHARGAV AI: ' +
-                answer +
-                '</div>';
-
-                   // Clear question box
-        document.getElementById("question").value = "";
-        }
-
-        // Keyboard shortcuts
-        document.addEventListener("keydown", function(event) {
-
-            // Ctrl + K = focus question box
-            if (event.ctrlKey && event.key.toLowerCase() === "k") {
-                event.preventDefault();
-
-                document.getElementById("question").focus();
-            }
-
-            // Enter = send question
-            if (event.key === "Enter") {
-                event.preventDefault();
-                askAI();
-            }
-
+            body: JSON.stringify({
+                question: question
+            })
         });
 
-    </script>
+        const data = await response.json();
+
+        // Remove Thinking message
+        const thinking = document.getElementById("thinking");
+
+        if (thinking) {
+            thinking.remove();
+        }
+
+        // Show Gemini answer
+        chat.innerHTML +=
+            '<div class="ai">🤖 BHARGAV AI: ' +
+            data.answer +
+            '</div>';
+
+    } catch (error) {
+
+        console.error(error);
+
+        const thinking = document.getElementById("thinking");
+
+        if (thinking) {
+            thinking.remove();
+        }
+
+        chat.innerHTML +=
+            '<div class="ai">🤖 BHARGAV AI: Sorry, I could not connect to the AI.</div>';
+    }
+}
+
+
+// Ctrl + K = focus question box
+document.addEventListener("keydown", function(event) {
+
+    if (event.ctrlKey && event.key.toLowerCase() === "k") {
+
+        event.preventDefault();
+
+        document.getElementById("question").focus();
+    }
+
+    // Enter = send question
+    if (event.key === "Enter") {
+
+        event.preventDefault();
+
+        askAI();
+    }
+
+});
+
+</script>
+
 </body>
 </html>
-
