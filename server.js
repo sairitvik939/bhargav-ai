@@ -21,13 +21,15 @@ app.post("/ask", async (req, res) => {
 
     try {
         const response = await fetch(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" +
-            process.env.GEMINI_API_KEY,
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
             {
                 method: "POST",
+
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "x-goog-api-key": process.env.GEMINI_API_KEY
                 },
+
                 body: JSON.stringify({
                     contents: [
                         {
@@ -48,9 +50,8 @@ app.post("/ask", async (req, res) => {
 
         if (!response.ok) {
             return res.status(500).json({
-                answer: "Gemini error: " + (
-                    data.error?.message || "Unknown error"
-                )
+                answer: "Gemini error: " +
+                    (data.error?.message || "Unknown error")
             });
         }
 
