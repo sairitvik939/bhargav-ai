@@ -9,7 +9,7 @@ app.get("/", (req, res) => {
     res.sendFile(__dirname + "/bhargav-ai.html");
 });
 
-// Ask Gemini
+// Ask Gemini using the Interactions API
 app.post("/ask", async (req, res) => {
     const question = req.body.question;
 
@@ -21,7 +21,7 @@ app.post("/ask", async (req, res) => {
 
     try {
         const response = await fetch(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+            "https://generativelanguage.googleapis.com/v1beta/interactions",
             {
                 method: "POST",
 
@@ -31,15 +31,8 @@ app.post("/ask", async (req, res) => {
                 },
 
                 body: JSON.stringify({
-                    contents: [
-                        {
-                            parts: [
-                                {
-                                    text: question
-                                }
-                            ]
-                        }
-                    ]
+                    model: "gemini-3.6-flash",
+                    input: question
                 })
             }
         );
@@ -55,9 +48,26 @@ app.post("/ask", async (req, res) => {
             });
         }
 
-        const answer =
-            data.candidates?.[0]?.content?.parts?.[0]?.text ||
-            "Gemini did not return an answer.";
+        let answer = data.output_text;
+
+        if (!answer && data.steps) {
+            for (const step of data.steps) {
+                if (step.type === "model_output" && step.content) {
+                    for (const item of step.content) {
+                        if (item.type === "text") {
+                            answer = item.text;
+                            break;
+                        }
+                    }
+                }
+
+                if (answer) {
+                    break;
+                }
+            }
+        }
+
+        answer = answer || "Gemini did not return an answer.";
 
         res.json({
             answer: answer
