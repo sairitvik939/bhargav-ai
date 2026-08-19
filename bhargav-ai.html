@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,8 +24,6 @@ body {
     display: flex;
     height: 100vh;
 }
-
-/* SIDEBAR */
 
 .sidebar {
     width: 290px;
@@ -81,8 +78,6 @@ body {
 .new-chat:hover {
     background: #374151;
 }
-
-/* SEARCH */
 
 .search-box {
     width: 100%;
@@ -180,8 +175,6 @@ body {
     background: #1f2937;
 }
 
-/* MAIN */
-
 .main {
     flex: 1;
     display: flex;
@@ -236,8 +229,6 @@ body {
 .top-button:hover {
     color: #111827;
 }
-
-/* CHAT */
 
 #chat {
     flex: 1;
@@ -328,8 +319,6 @@ body {
     opacity: .7;
 }
 
-/* INPUT */
-
 .input-area {
     background: white;
     border-top: 1px solid #e5e7eb;
@@ -378,8 +367,6 @@ body {
     margin-top: 8px;
 }
 
-/* MENU */
-
 .chat-menu {
     position: fixed;
     background: white;
@@ -406,10 +393,7 @@ body {
     background: #f3f4f6;
 }
 
-/* MOBILE */
-
 @media (max-width: 750px) {
-
     .sidebar {
         width: 230px;
     }
@@ -420,7 +404,6 @@ body {
 }
 
 @media (max-width: 600px) {
-
     .sidebar {
         display: none;
     }
@@ -451,8 +434,6 @@ body {
 <body>
 
 <div class="app">
-
-<!-- SIDEBAR -->
 
 <aside class="sidebar">
 
@@ -497,9 +478,6 @@ body {
 
 </aside>
 
-
-<!-- MAIN -->
-
 <main class="main">
 
     <header class="topbar">
@@ -531,9 +509,7 @@ body {
 
     </header>
 
-
     <div id="chat"></div>
-
 
     <div class="input-area">
 
@@ -562,9 +538,6 @@ body {
 
 </div>
 
-
-<!-- CHAT MENU -->
-
 <div id="chatMenu" class="chat-menu">
 
     <button onclick="renameSelectedChat()">
@@ -585,7 +558,6 @@ body {
 
 </div>
 
-
 <script>
 
 const STORAGE_KEY = "bhargav_ai_advanced_history";
@@ -601,16 +573,12 @@ const chatBox = document.getElementById("chat");
 const questionBox = document.getElementById("question");
 const sendButton = document.getElementById("sendButton");
 
-
 function saveChats() {
-
     localStorage.setItem(
         STORAGE_KEY,
         JSON.stringify(chats)
     );
-
 }
-
 
 function createChat() {
 
@@ -637,9 +605,7 @@ function createChat() {
     renderHistory();
 
     loadCurrentChat();
-
 }
-
 
 function getCurrentChat() {
 
@@ -649,7 +615,6 @@ function getCurrentChat() {
 
 }
 
-
 function newChat() {
 
     createChat();
@@ -657,7 +622,6 @@ function newChat() {
     questionBox.focus();
 
 }
-
 
 function renderHistory() {
 
@@ -686,7 +650,6 @@ function renderHistory() {
 
     });
 
-
     if (filtered.length === 0) {
 
         list.innerHTML =
@@ -695,7 +658,6 @@ function renderHistory() {
         return;
 
     }
-
 
     filtered.forEach(chat => {
 
@@ -718,7 +680,6 @@ function renderHistory() {
 
         };
 
-
         const pin =
             document.createElement("span");
 
@@ -727,7 +688,6 @@ function renderHistory() {
         pin.textContent =
             chat.pinned ? "📌" : "💬";
 
-
         const name =
             document.createElement("span");
 
@@ -735,7 +695,6 @@ function renderHistory() {
 
         name.textContent =
             chat.title;
-
 
         const menu =
             document.createElement("button");
@@ -755,7 +714,6 @@ function renderHistory() {
 
         };
 
-
         item.appendChild(pin);
 
         item.appendChild(name);
@@ -767,7 +725,6 @@ function renderHistory() {
     });
 
 }
-
 
 function showMenu(event) {
 
@@ -784,7 +741,6 @@ function showMenu(event) {
 
 }
 
-
 document.addEventListener("click", function(event) {
 
     const menu =
@@ -798,7 +754,6 @@ document.addEventListener("click", function(event) {
     }
 
 });
-
 
 function loadCurrentChat() {
 
@@ -815,10 +770,8 @@ function loadCurrentChat() {
 
     }
 
-
     document.getElementById("currentTitle")
         .textContent = chat.title;
-
 
     if (chat.messages.length === 0) {
 
@@ -828,7 +781,6 @@ function loadCurrentChat() {
         return;
 
     }
-
 
     chatBox.innerHTML = "";
 
@@ -845,7 +797,6 @@ function loadCurrentChat() {
     scrollToBottom();
 
 }
-
 
 function welcomeHTML() {
 
@@ -894,7 +845,6 @@ function welcomeHTML() {
 
 }
 
-
 function displayMessage(role, text, save) {
 
     const message =
@@ -906,12 +856,10 @@ function displayMessage(role, text, save) {
             ? "user"
             : "ai");
 
-
     const label =
         role === "user"
             ? "YOU"
             : "BHARGAV AI";
-
 
     message.innerHTML =
         '<span class="message-label">' +
@@ -919,9 +867,7 @@ function displayMessage(role, text, save) {
         '</span>' +
         escapeHTML(text);
 
-
     chatBox.appendChild(message);
-
 
     if (save) {
 
@@ -943,7 +889,6 @@ function displayMessage(role, text, save) {
 
 }
 
-
 async function askAI() {
 
     const question =
@@ -953,18 +898,12 @@ async function askAI() {
         return;
     }
 
-
     if (!currentChatId) {
-
         createChat();
-
     }
-
 
     const chat = getCurrentChat();
 
-
-    // Automatic title
     if (
         chat.title === "New Chat" &&
         chat.messages.length === 0
@@ -977,20 +916,17 @@ async function askAI() {
 
     }
 
-
     displayMessage(
         "user",
         question,
         true
     );
 
-
     questionBox.value = "";
 
     sendButton.disabled = true;
 
     sendButton.textContent = "...";
-
 
     const thinking =
         document.createElement("div");
@@ -1007,7 +943,6 @@ async function askAI() {
     chatBox.appendChild(thinking);
 
     scrollToBottom();
-
 
     try {
 
@@ -1026,27 +961,26 @@ async function askAI() {
 
             });
 
+        if (!response.ok) {
+            throw new Error("Server error: " + response.status);
+        }
 
         const data =
             await response.json();
-
 
         if (thinking) {
             thinking.remove();
         }
 
-
         const answer =
             data.answer ||
             "I could not generate an answer.";
-
 
         displayMessage(
             "ai",
             answer,
             true
         );
-
 
         saveChats();
 
@@ -1055,20 +989,16 @@ async function askAI() {
         document.getElementById("currentTitle")
             .textContent = chat.title;
 
-
     } catch (error) {
 
         console.error(error);
-
 
         if (thinking) {
             thinking.remove();
         }
 
-
         const errorText =
             "Sorry, I could not connect to the AI.";
-
 
         displayMessage(
             "ai",
@@ -1078,7 +1008,6 @@ async function askAI() {
 
     }
 
-
     sendButton.disabled = false;
 
     sendButton.textContent = "SEND";
@@ -1086,7 +1015,6 @@ async function askAI() {
     scrollToBottom();
 
 }
-
 
 function renameCurrentChat() {
 
@@ -1098,7 +1026,6 @@ function renameCurrentChat() {
 
 }
 
-
 function renameSelectedChat() {
 
     renameChat(selectedChatId);
@@ -1106,7 +1033,6 @@ function renameSelectedChat() {
     closeMenu();
 
 }
-
 
 function renameChat(id) {
 
@@ -1117,13 +1043,11 @@ function renameChat(id) {
         return;
     }
 
-
     const newName =
         prompt(
             "Enter a new chat name:",
             chat.title
         );
-
 
     if (
         newName &&
@@ -1148,7 +1072,6 @@ function renameChat(id) {
 
 }
 
-
 function pinSelectedChat() {
 
     const chat =
@@ -1169,42 +1092,34 @@ function pinSelectedChat() {
 
 }
 
-
 function deleteSelectedChat() {
 
     if (!selectedChatId) {
         return;
     }
 
-
     const chat =
         chats.find(c => c.id === selectedChatId);
-
 
     if (!chat) {
         return;
     }
-
 
     const confirmDelete =
         confirm(
             "Delete this conversation?"
         );
 
-
     if (!confirmDelete) {
         return;
     }
-
 
     chats =
         chats.filter(
             c => c.id !== selectedChatId
         );
 
-
     saveChats();
-
 
     if (currentChatId === selectedChatId) {
 
@@ -1223,13 +1138,11 @@ function deleteSelectedChat() {
 
     }
 
-
     renderHistory();
 
     closeMenu();
 
 }
-
 
 function deleteAllChats() {
 
@@ -1237,17 +1150,14 @@ function deleteAllChats() {
         return;
     }
 
-
     const confirmDelete =
         confirm(
             "Delete ALL chat history?"
         );
 
-
     if (!confirmDelete) {
         return;
     }
-
 
     chats = [];
 
@@ -1259,7 +1169,6 @@ function deleteAllChats() {
 
 }
 
-
 function clearCurrentMessages() {
 
     const chat =
@@ -1269,22 +1178,18 @@ function clearCurrentMessages() {
         return;
     }
 
-
     if (chat.messages.length === 0) {
         return;
     }
-
 
     const confirmClear =
         confirm(
             "Clear messages from this chat?"
         );
 
-
     if (!confirmClear) {
         return;
     }
-
 
     chat.messages = [];
 
@@ -1294,13 +1199,11 @@ function clearCurrentMessages() {
 
 }
 
-
 function exportCurrentChat() {
 
     exportChat(currentChatId);
 
 }
-
 
 function exportSelectedChat() {
 
@@ -1309,7 +1212,6 @@ function exportSelectedChat() {
     closeMenu();
 
 }
-
 
 function exportChat(id) {
 
@@ -1326,7 +1228,6 @@ function exportChat(id) {
 
     }
 
-
     let text =
         "BHARGAV AI\n";
 
@@ -1341,7 +1242,6 @@ function exportChat(id) {
             .toLocaleString() +
         "\n\n";
 
-
     chat.messages.forEach(message => {
 
         text +=
@@ -1355,17 +1255,14 @@ function exportChat(id) {
 
     });
 
-
     const blob =
         new Blob(
             [text],
             { type: "text/plain" }
         );
 
-
     const url =
         URL.createObjectURL(blob);
-
 
     const link =
         document.createElement("a");
@@ -1379,13 +1276,11 @@ function exportChat(id) {
         ) +
         ".txt";
 
-
     link.click();
 
     URL.revokeObjectURL(url);
 
 }
-
 
 function useSuggestion(text) {
 
@@ -1395,7 +1290,6 @@ function useSuggestion(text) {
 
 }
 
-
 function closeMenu() {
 
     document.getElementById("chatMenu")
@@ -1403,14 +1297,12 @@ function closeMenu() {
 
 }
 
-
 function scrollToBottom() {
 
     chatBox.scrollTop =
         chatBox.scrollHeight;
 
 }
-
 
 function escapeHTML(text) {
 
@@ -1422,9 +1314,6 @@ function escapeHTML(text) {
     return div.innerHTML;
 
 }
-
-
-/* ENTER */
 
 questionBox.addEventListener(
     "keydown",
@@ -1440,9 +1329,6 @@ questionBox.addEventListener(
 
     }
 );
-
-
-/* CTRL + K */
 
 document.addEventListener(
     "keydown",
@@ -1461,9 +1347,6 @@ document.addEventListener(
 
     }
 );
-
-
-/* START */
 
 if (chats.length === 0) {
 
@@ -1484,4 +1367,3 @@ if (chats.length === 0) {
 
 </body>
 </html>
-```
